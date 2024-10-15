@@ -3,9 +3,7 @@
 * Copyright 2013-2023 Start Bootstrap
 * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-freelancer/blob/master/LICENSE)
 */
-//
 // Scripts
-// 
 
 window.addEventListener('DOMContentLoaded', event => {
 
@@ -16,14 +14,13 @@ window.addEventListener('DOMContentLoaded', event => {
             return;
         }
         if (window.scrollY === 0) {
-            navbarCollapsible.classList.remove('navbar-shrink')
+            navbarCollapsible.classList.remove('navbar-shrink');
         } else {
-            navbarCollapsible.classList.add('navbar-shrink')
+            navbarCollapsible.classList.add('navbar-shrink');
         }
-
     };
 
-    // Shrink the navbar 
+    // Shrink the navbar
     navbarShrink();
 
     // Shrink the navbar when page is scrolled
@@ -36,7 +33,7 @@ window.addEventListener('DOMContentLoaded', event => {
             target: '#mainNav',
             rootMargin: '0px 0px -40%',
         });
-    };
+    }
 
     // Collapse responsive navbar when toggler is visible
     const navbarToggler = document.body.querySelector('.navbar-toggler');
@@ -51,4 +48,35 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     });
 
+});
+
+// EmailJS Integration
+document.addEventListener('DOMContentLoaded', function() {
+    emailjs.init("M7i2D9Axec5u6MMD2");
+
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // Get form values
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const message = document.getElementById('message').value;
+
+        // EmailJS template parameters
+        const templateParams = {
+            from_name: name,
+            from_email: email,
+            message: message,
+        };
+
+        // Send email
+        emailjs.send('service_portfolio', 'template_kxnkma5', templateParams)
+            .then(function(response) {
+                console.log('SUCCESS!', response.status, response.text);
+                document.getElementById('responseMessage').innerHTML = '<div class="text-success">Your message was sent successfully. Thank you for reaching out!</div>';
+            }, function(error) {
+                console.log('FAILED...', error);
+                document.getElementById('responseMessage').innerHTML = '<div class="text-danger">There was an error sending your message. Please try again later.</div>';
+            });
+    });
 });
