@@ -74,8 +74,27 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(function(response) {
                 console.log('SUCCESS!', response.status, response.text);
                 document.getElementById('responseMessage').innerHTML = '<div class="text-success">Your message was sent successfully. Thank you for reaching out!</div>';
+                // Clear form
+                document.getElementById('contactForm').reset();
             }, function(error) {
                 console.log('FAILED...', error);
+                
+                // Check if it's the Gmail authentication error
+                if (error.status === 412 && error.text.includes('Gmail')) {
+                    // Send error notification to yourself using backup service
+                    emailjs.send('BACKUP_SERVICE_ID', 'BACKUP_TEMPLATE_ID', {
+                        error_type: 'Gmail Authentication Failed',
+                        error_status: error.status,
+                        error_message: error.text,
+                        timestamp: new Date().toLocaleString(),
+                        page_url: window.location.href
+                    }).then(function() {
+                        console.log('Error notification sent successfully');
+                    }).catch(function(notificationError) {
+                        console.log('Failed to send error notification:', notificationError);
+                    });
+                }
+                
                 document.getElementById('responseMessage').innerHTML = '<div class="text-danger">There was an error sending your message. Please try again later.</div>';
             });
     });
